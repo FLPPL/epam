@@ -29,8 +29,7 @@ public class MyShell implements ShellInterface {
 	void init(){
 		wd = Paths.get("").toAbsolutePath(); 
 		pathSign = "$";
-		pMode = false;
-		
+		pMode = false;		
 	}
 	//LOOP METHOD
 	public void start(){
@@ -45,11 +44,9 @@ public class MyShell implements ShellInterface {
 					 if(prompt()){	 
 						 if(dir()){						  
 							 if(tree()) {							
-							   if(pMode == true) {
-											 cd();												
-									     } 		else{				//	
-									    	 printUnknownCommand();
-							     }
+							   	 if(cd()){
+									 this.printUnknownCommand();
+								} 											
 							 }
 						 }							
 					 }		
@@ -66,13 +63,14 @@ public class MyShell implements ShellInterface {
 	}
 	//print console header
 	void printInput(){
-		StringBuilder sb = new StringBuilder(pathSign);
+		StringBuilder sb = new StringBuilder("[MyShell] ");
+		sb.append(pathSign);
 		sb.append(">");
 		System.out.print(sb);
 	}
 	//Unknown command message
 	void printUnknownCommand(){		
-		System.out.println("Unknown command");
+		System.out.println( cmnd + " : Unknown command");
 	}
 	
 	@Override
@@ -106,7 +104,7 @@ public class MyShell implements ShellInterface {
 	@Override
 	public boolean cd() throws MyCommandExecption {
 	
-        if(Pattern.compile("cd (\\..|\\w+)").matcher(cmnd).matches())
+        if(Pattern.compile("cd (\\..|\\w+)").matcher(cmnd).matches() && pMode)
 		 {		            	
         	 cmnd = cmnd.replaceFirst("cd", ""); 
         	 cmnd = cmnd.trim();
@@ -135,14 +133,12 @@ public class MyShell implements ShellInterface {
         	 //DOORS for connected command input like 'prompt $cwd dir' or 'prompt $cwd cd smth'
 //        	 while (Pattern.compile("cd (\\..|\\w+)").matcher(cmnd).find())  {
         	  //  System.out.printf("group: %s%n", matcher.group());
-			//}
-        	 
+			//}     
         	   return false;
 		 }
-        else
-    	{		//return true;
-        	throw new MyCommandExecption();		
-		}
+        else 	{
+        	return true;        	
+        }
      
 	}
 	
@@ -152,17 +148,19 @@ public class MyShell implements ShellInterface {
 		// Leaved regex i want to 'open doors' for connected command input like 'prompt $cwd dir' or 'prompt $cwd cd smth'
 		  if(Pattern.compile("dir").matcher(cmnd).matches())
 	   		 {	
-	   			 System.out.println("Content of" + wd);
+			  StringBuilder sb = new StringBuilder("Content of " );
+			  sb.append(wd);
+	   			 System.out.println(sb);
 	   			 try (DirectoryStream<Path> stream1 = Files.newDirectoryStream(wd)) {
 	   			       for (Path entry: stream1) {	   			       
 	   			           if (Files.isRegularFile(entry)) {
-	   				    		StringBuilder sb = new StringBuilder("FILE ");
+	   				    		sb = new StringBuilder("FILE ");
 	   				    		sb.append(entry.getFileName());
 	   				    		System.out.println(sb);
 	   				        }
 	   				    	
 	   				     	if (Files.isDirectory(entry)) {
-	   				     		StringBuilder sb = new StringBuilder("DIR ");
+	   				     		sb = new StringBuilder("DIR ");
 	   				     		sb.append(entry.getFileName());
 	   				    		System.out.println(sb);
 	   				        }				       
@@ -207,7 +205,7 @@ public class MyShell implements ShellInterface {
 @Override
 	public boolean exit() throws Exception {
 		// TODO Auto-generated method stub
-	
+	  // Thinking about move this functionality to Main class and execute System.exit() when instance of MyConsole class is destroyed
 	 if(Pattern.compile("exit").matcher(cmnd).matches())
 	 {						
 		 try
@@ -222,7 +220,7 @@ public class MyShell implements ShellInterface {
 	
 	 }		  
 	 return true;
-	}
+  }
 	
 	
 	@Override

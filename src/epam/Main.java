@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 import epam.entites.MyShell;
 
-public class Epam {
+public class Main {
 public static void main(String[] args) {	
 	
 	//TESTED ONLY ON LINUX
