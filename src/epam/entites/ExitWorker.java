@@ -1,4 +1,4 @@
-package epam.entites.workers;
+package epam.entites;
 
 import java.nio.file.Path;
 import java.util.regex.Pattern;

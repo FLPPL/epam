@@ -1,4 +1,4 @@
-package epam.entites.workers;
+package epam.entites;
 
 import java.nio.file.Path;
 import java.util.regex.Matcher;
@@ -39,10 +39,6 @@ public class PromptWorker extends PathWorker {
 				pathSign = cmnd;
 			}
 		}
-	}
-
-	public String getPathSign() {
-		return pathSign;
 	}
 	
 }

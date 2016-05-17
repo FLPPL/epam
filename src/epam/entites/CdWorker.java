@@ -1,4 +1,4 @@
-package epam.entites.workers;
+package epam.entites;
 
 import java.io.File;
 import java.nio.file.Files;
