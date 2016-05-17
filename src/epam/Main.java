@@ -13,9 +13,9 @@ import epam.entites.PromptWorker;
 import epam.entites.TreeWorker;
 
 public class Main {
-	//TESTED ONLY ON LINUX
+	//TESTED ONLY ON LINUX AND WINDOWS
 	static Map<String, CommandWorker> map = new HashMap<String, CommandWorker>();
-
+	static PathWorker path;
 	public static void main(String[] args) {
 		initDefault();
 		start();
@@ -26,7 +26,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		String firstcmd;
 		String cmd;
-		printInput(PathWorker.pathSign);
+		path.printInput();
 		while (sc.hasNext()) {
 
 			cmd = sc.nextLine().trim();
@@ -39,12 +39,12 @@ public class Main {
 			// check first word of command, that equals some of definied keys
 			if (map.containsKey(firstcmd)) {
 				worker = map.get(firstcmd);
-				worker.work(cmd, PathWorker.path);
+				worker.work(cmd, path.getPath());
 			} else {
-				printUnknownCommand(firstcmd);
+				path.printUnknownCommand(firstcmd);
 			}
 
-			printInput(PathWorker.pathSign);
+			path.printInput();
 		}
 		sc.close();
 
@@ -56,7 +56,10 @@ public class Main {
 		DirWorker dir = new DirWorker();
 		CdWorker cd = new CdWorker();
 		ExitWorker exit = new ExitWorker();
-
+		path = new PathWorker();
+		
+		prompt.setPathWorker(path);
+		cd.setPathWorker(path);
 		map.put(prompt.getKey(), prompt);
 		map.put(tree.getKey(), tree);
 		map.put(dir.getKey(), dir);
@@ -64,18 +67,6 @@ public class Main {
 		map.put(exit.getKey(), exit);
 	}
 
-	public static void printUnknownCommand(String cmd) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(cmd);
-		sb.append(" : Unknown command");
-		System.out.println(sb);
-	}
 
-	public static void printInput(String pathSign) {
-		StringBuilder sb = new StringBuilder("[MyShell] ");
-		sb.append(pathSign);
-		sb.append(">");
-		System.out.print(sb);
-	}
 
 }

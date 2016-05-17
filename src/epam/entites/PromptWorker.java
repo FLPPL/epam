@@ -4,10 +4,19 @@ import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PromptWorker extends PathWorker {
+public class PromptWorker extends CommandWorker {
 
 	Pattern cwdPattern;
 	Pattern resetPattern;
+	PathWorker pathWorker;
+	
+	public PathWorker getPathWorker() {
+		return pathWorker;
+	}
+
+	public void setPathWorker(PathWorker pathWorker) {
+		this.pathWorker = pathWorker;
+	}
 
 	@Override
 	public void work(String cmnd,Path wd){
@@ -28,15 +37,15 @@ public class PromptWorker extends PathWorker {
 	public void doWork(String cmnd, Path wd) {
 		Matcher m = resetPattern.matcher(cmnd);
 		if (m.matches()) {
-			pathSign = "$";
-			pmode = false;
+			pathWorker.setPathSign("$");
+			pathWorker.setPmode(false);
 		} else {
 			m = cwdPattern.matcher(cmnd);
 			if (m.matches()) {
-				pmode = true;
-				pathSign = wd.toString();
+				pathWorker.setPmode(true);
+				pathWorker.setPathSign(wd.toString());
 			} else {
-				pathSign = cmnd;
+				pathWorker.setPathSign(cmnd);			
 			}
 		}
 	}
